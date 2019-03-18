@@ -1,0 +1,34 @@
+version: '3.6'
+
+services:
+  #Back end 
+  smart-brain-api:
+    container_name: backend
+    build: ./
+    command: npm start
+    working_dir: /usr/srs/facerecognition
+    environment:
+      POSTGRES_URI: postgres://sally:secret@postgres:5432/smart-brain-docker
+      REDIS_URI: redis://redis:6379
+    ports: 
+      - "3000:3000"
+    volumes:
+      - ./:/usr/srs/facerecognition
+      
+
+  #Postgres
+  postgres:
+    environment:
+      POSTGRES_USER: sally
+      POSTGRESS_PASSWORD: secret
+      POSTGRES_DB: smart-brain-docker
+      POSTGRES_HOST: postgres
+    build: ./postgres
+    ports:
+      - "4306:5432"
+
+    #Redis
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
